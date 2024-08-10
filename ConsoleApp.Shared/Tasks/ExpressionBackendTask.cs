@@ -1,6 +1,6 @@
-using ConsoleApp.Models;
+using ConsoleApp.Shared.Models;
 
-namespace ConsoleApp.Tasks;
+namespace ConsoleApp.Shared.Tasks;
 
 public class ExpressionBackendTask : IBackendTask {
   

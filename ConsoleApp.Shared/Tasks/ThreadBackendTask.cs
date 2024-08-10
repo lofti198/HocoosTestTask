@@ -1,4 +1,4 @@
-namespace ConsoleApp.Tasks;
+namespace ConsoleApp.Shared.Tasks;
 
 public class ThreadBackendTask : IBackendTask {
   protected record ThreadTaskItemConfig(int Number);

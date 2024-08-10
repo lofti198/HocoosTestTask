@@ -1,4 +1,4 @@
-namespace ConsoleApp.Models;
+namespace ConsoleApp.Shared.Models;
 
 public record Product : IPrimaryEntity {
   public long Id { get; set; }
