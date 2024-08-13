@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ConsoleApp.Shared.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace ConsoleApp.Shared.Configuration
 {
@@ -8,6 +9,9 @@ namespace ConsoleApp.Shared.Configuration
         public static ServiceProvider ConfigureAndBuildServiceProvider(int maxParallelism)
         {
             var services = new ServiceCollection();
+
+            // Add logging service
+            services.AddLogging(configure => configure.AddConsole());
 
             // Configure services
             ConfigureServices(services, maxParallelism);
@@ -19,7 +23,10 @@ namespace ConsoleApp.Shared.Configuration
         private static void ConfigureServices(IServiceCollection services, int maxParallelism)
         {
             // Register tasks with the appropriate constructor parameters
-            services.AddTransient<LimitedThreadBackendTask>(provider => new LimitedThreadBackendTask(maxParallelism));
+            services.AddTransient<LimitedThreadBackendTask>(provider => 
+                new LimitedThreadBackendTask(
+                    maxParallelism,
+                    provider.GetRequiredService<ILogger<LimitedThreadBackendTask>>()));
             services.AddTransient<ExpressionBackendTask>();
         }
     }
