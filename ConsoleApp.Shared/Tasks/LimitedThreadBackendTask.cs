@@ -1,16 +1,17 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConsoleApp.Shared.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace ConsoleApp.Shared.Tasks
 {
     public class LimitedThreadBackendTask : ThreadBackendTask
     {
         private readonly SemaphoreSlim _semaphore;
-
         private readonly ILogger<LimitedThreadBackendTask> _logger;
 
-        public LimitedThreadBackendTask(int maxParallelism, ILogger<LimitedThreadBackendTask> logger)
+        public LimitedThreadBackendTask(IOptions<LimitedThreadBackendTaskOptions> options, ILogger<LimitedThreadBackendTask> logger)
         {
-            _semaphore = new SemaphoreSlim(maxParallelism);
+            _semaphore = new SemaphoreSlim(options.Value.MaxParallelism);
             _logger = logger;
         }
 
@@ -18,7 +19,7 @@ namespace ConsoleApp.Shared.Tasks
         {
             var tasks = configs.Select(async config =>
             {
-                await _semaphore.WaitAsync(); 
+                await _semaphore.WaitAsync();
 
                 try
                 {
@@ -26,7 +27,7 @@ namespace ConsoleApp.Shared.Tasks
                 }
                 finally
                 {
-                    _semaphore.Release(); 
+                    _semaphore.Release();
                 }
             });
 
@@ -37,6 +38,5 @@ namespace ConsoleApp.Shared.Tasks
         {
             _logger.LogInformation(result.Message);
         }
-
     }
 }
