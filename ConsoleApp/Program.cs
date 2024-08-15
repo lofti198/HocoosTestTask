@@ -10,11 +10,11 @@ var serviceProvider = new ServiceCollection()
         options.MaxParallelism = 5;
     })
     .AddTransient<LimitedThreadBackendTask>()
-    .AddTransient<ExpressionBackendTask>()
+    .AddTransient<LimitedDataExpressionBackendTask>()
     .BuildServiceProvider();
 
 var task1 = serviceProvider.GetRequiredService<LimitedThreadBackendTask>();
 await task1.RunAsync();
 
-var task2 = serviceProvider.GetRequiredService<ExpressionBackendTask>();
+var task2 = serviceProvider.GetRequiredService<LimitedDataExpressionBackendTask>();
 await task2.RunAsync();
